@@ -4,6 +4,7 @@ import "./app.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "./routes/root";
 import Announcements from "./components/Announcements";
+import Announcement from "./components/Announcement";
 
 const router = createBrowserRouter([
   {
@@ -13,6 +14,10 @@ const router = createBrowserRouter([
       {
         path: "announcements",
         element: <Announcements />,
+      },
+      {
+        path: "announcements/:announcementId",
+        element: <Announcement />,
       },
     ],
   },
