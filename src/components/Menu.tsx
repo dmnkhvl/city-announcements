@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const Menu: React.FC = () => {
   return (
-    <div className="h-dvh w-1/5 border-r">
+    <div className="h-dvh w-80 border-r">
       <header className="p-6">
         <Link to={"/"} className="flex items-center gap-x-2">
           <div className="rounded-lg w-9 h-9 border font-bold flex justify-center items-center">

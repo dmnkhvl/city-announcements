@@ -5,6 +5,7 @@ export default {
     extend: {
       backgroundColor: {
         primary: "white",
+        action: "#FFB64B",
       },
       textColor: {
         primary: "black",

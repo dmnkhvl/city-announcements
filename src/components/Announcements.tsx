@@ -46,7 +46,7 @@ const TableHeader: React.FC<TableHeaderProps> = ({ children }) => {
 
 const Announcements: React.FC = () => {
   return (
-    <div className="p-10 w-full">
+    <div className="py-12 px-10 w-full bg-blue-50">
       <h1 className="text-2xl font-bold mb-4">Announcements</h1>
       <table className="min-w-full mt-10">
         <thead>
