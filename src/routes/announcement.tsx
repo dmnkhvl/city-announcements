@@ -5,17 +5,11 @@ import { MultiValue } from "react-select"
 import Select from "react-select"
 import { useAnnouncements } from "../context/AnnouncementsContext"
 import { AnnouncementCategory } from "../types"
+import { getAnnouncementCategoryOptions } from "../helpers"
 
-type OptionT = { value: string; label: string }
+type AnnouncementCategoryOption = { value: string; label: string }
 
-const options: OptionT[] = [
-  { value: AnnouncementCategory.COMMUNITY_EVENTS, label: "Community Events" },
-  { value: AnnouncementCategory.CULTURE, label: "Culture" },
-  { value: AnnouncementCategory.CRIME_SAFETY, label: "Crime & Safety" },
-  { value: AnnouncementCategory.EMERGENCIES, label: "Emergencies" },
-  { value: AnnouncementCategory.DISCOUNTS_BENEFITS, label: "Discounts & Benefits" },
-  { value: AnnouncementCategory.KIDS_FAMILY, label: "Kids & Family" },
-]
+const options: AnnouncementCategoryOption[] = getAnnouncementCategoryOptions()
 
 export default function AnnouncementPage() {
   const navigate = useNavigate()
@@ -40,13 +34,33 @@ export default function AnnouncementPage() {
     label: category.replace("_", " "),
   }))
   const [selectedCategories, setSelectedCategories] =
-    useState<MultiValue<OptionT>>(initialCategories)
+    useState<MultiValue<AnnouncementCategoryOption>>(initialCategories)
 
-  const handleCategoryChange = (selectedOptions: MultiValue<OptionT>) => {
+  const handleCategoryChange = (selectedOptions: MultiValue<AnnouncementCategoryOption>) => {
     setSelectedCategories(selectedOptions)
   }
 
   const handlePublish = () => {
+    if (!title.trim()) {
+      alert("Title is required.")
+      return
+    }
+
+    if (!content.trim()) {
+      alert("Content is required.")
+      return
+    }
+
+    if (!publicationDate) {
+      alert("Publication Date is required.")
+      return
+    }
+
+    if (selectedCategories.length === 0) {
+      alert("At least one category must be selected.")
+      return
+    }
+
     const updatedAnnouncement = {
       ...announcement,
       title,
