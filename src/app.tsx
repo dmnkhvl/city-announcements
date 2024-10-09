@@ -1,15 +1,17 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import "./app.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import RootLayout from "./routes/root";
-import Announcements from "./components/Announcements";
-import Announcement from "./components/Announcement";
+import { StrictMode } from "react"
+import { createRoot } from "react-dom/client"
+import "./styles/global.css"
+import "./styles/colors.css"
+import { createBrowserRouter, RouterProvider } from "react-router-dom"
+import RootLayout, { loader as rootLoader } from "./routes/root"
+import Announcement from "./routes/Announcement"
+import Announcements from "./routes/announcements"
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
+    loader: rootLoader,
     children: [
       {
         path: "announcements",
@@ -21,10 +23,10 @@ const router = createBrowserRouter([
       },
     ],
   },
-]);
+])
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <RouterProvider router={router} />
-  </StrictMode>,
-);
+  </StrictMode>
+)
