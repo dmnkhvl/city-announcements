@@ -9,7 +9,7 @@
 }
 
 .pageTitle {
-  @apply text-2xl font-bold mb-6;
+  @apply text-2xl font-bold;
 }
 
 .pageSubTitle {

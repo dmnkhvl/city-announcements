@@ -1,10 +1,9 @@
-import React from "react"
 import { announcements } from "../data/announcements"
 import dayjs from "dayjs"
 import { Link } from "react-router-dom"
 import { MdModeEdit } from "react-icons/md"
 
-const Announcements: React.FC = () => {
+export default function AnnouncementsPage() {
   const sortedAnnouncements = announcements.sort((a, b) => {
     return new Date(b.lastUpdate).getTime() - new Date(a.lastUpdate).getTime()
   })
@@ -43,5 +42,3 @@ const Announcements: React.FC = () => {
     </div>
   )
 }
-
-export default Announcements

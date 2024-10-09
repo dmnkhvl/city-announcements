@@ -1,7 +1,11 @@
 import { useState } from "react"
+import { IoChevronBackOutline } from "react-icons/io5"
+import { useNavigate, useParams } from "react-router-dom"
 
 import { MultiValue } from "react-select"
 import Select from "react-select/base"
+import { Announcement as AnnouncementT } from "../types/announcement"
+import { announcements } from "../data/announcements"
 
 type OptionT = { value: string; label: string }
 
@@ -11,7 +15,18 @@ const options: OptionT[] = [
   { value: "vanilla", label: "Vanilla" },
 ]
 
-export default function Announcement() {
+export default function AnnouncementPage() {
+  const navigate = useNavigate()
+  const { announcementId } = useParams()
+
+  const id = parseInt(announcementId!, 10)
+
+  const announcement = announcements[id]
+
+  if (!announcement) {
+    return <div>Announcement not found</div>
+  }
+
   const [selectedCategories, setSelectedCategories] = useState<MultiValue<OptionT>>([])
 
   const handleChange = (selectedOptions: MultiValue<OptionT>) => {
@@ -20,7 +35,12 @@ export default function Announcement() {
 
   return (
     <div className="px-80 py-12 w-full">
-      <h1 className="pageTitle">Edit the announcement</h1>
+      <header className="flex items-center gap-x-2 mb-6">
+        <button onClick={() => navigate(-1)}>
+          <IoChevronBackOutline size={24} />
+        </button>
+        <h1 className="pageTitle ">Edit </h1>
+      </header>
       <form className="w-full max-w-[80%]">
         <main className="flex flex-col gap-y-6">
           <section className="flex flex-col gap-y-4">
@@ -32,6 +52,7 @@ export default function Announcement() {
                 type="text"
                 id="title"
                 name="title"
+                value={announcement.title}
                 className="border border-gray-300 rounded-lg px-4 py-2 w-full"
                 placeholder="Announcement title"
               />
@@ -70,6 +91,7 @@ export default function Announcement() {
               type="datetime-local"
               id="title"
               name="title"
+              value={announcement.publicationDate}
               className="border border-gray-300 rounded-lg px-4 py-2 w-full"
               placeholder="Enter the announcement title"
             />
