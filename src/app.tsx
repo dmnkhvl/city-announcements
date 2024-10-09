@@ -3,15 +3,15 @@ import { createRoot } from "react-dom/client"
 import "./styles/global.css"
 import "./styles/colors.css"
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import RootLayout, { loader as rootLoader } from "./routes/root"
+import RootLayout from "./routes/root"
 import Announcement from "./routes/announcement"
 import Announcements from "./routes/announcements"
+import { AnnouncementsProvider } from "./context/AnnouncementsContext"
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
-    loader: rootLoader,
     children: [
       {
         path: "announcements",
@@ -27,6 +27,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AnnouncementsProvider>
+      <RouterProvider router={router} />
+    </AnnouncementsProvider>
   </StrictMode>
 )

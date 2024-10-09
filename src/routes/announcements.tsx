@@ -1,9 +1,11 @@
-import { announcements } from "../data/announcements"
 import dayjs from "dayjs"
 import { Link } from "react-router-dom"
 import { MdModeEdit } from "react-icons/md"
+import { useAnnouncements } from "../context/AnnouncementsContext"
 
 export default function AnnouncementsPage() {
+  const { announcements } = useAnnouncements()
+
   const sortedAnnouncements = announcements.sort((a, b) => {
     return new Date(b.lastUpdate).getTime() - new Date(a.lastUpdate).getTime()
   })

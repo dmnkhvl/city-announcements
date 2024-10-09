@@ -1,8 +1,7 @@
 import clsx from "clsx"
 import { FaBullhorn, FaHome } from "react-icons/fa"
-import { IoMdHome } from "react-icons/io"
 import { Link, useLocation } from "react-router-dom"
-import { getNumOfAnnouncements } from "../hooks/announcements"
+import { useAnnouncements } from "../context/AnnouncementsContext"
 
 type MenuItemProps = {
   label: string
@@ -47,6 +46,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ href, label, icon, rightEnd }) => {
 }
 
 const Sidebar: React.FC = () => {
+  const { announcements } = useAnnouncements()
   return (
     <div className="h-dvh w-80 border-r">
       <header className="p-4 border-y h-18">
@@ -63,7 +63,7 @@ const Sidebar: React.FC = () => {
           label="Announcements"
           href="/announcements"
           icon={<FaBullhorn size={16} />}
-          rightEnd={<p>{getNumOfAnnouncements()}</p>}
+          rightEnd={<p>{announcements.length}</p>}
         />
       </menu>
     </div>

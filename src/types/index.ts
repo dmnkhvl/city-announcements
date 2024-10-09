@@ -10,9 +10,10 @@ export enum AnnouncementCategory {
 }
 
 export type Announcement = {
-  id: number;
-  title: string;
-  publicationDate: string;
-  lastUpdate: string;
-  categories: AnnouncementCategory[];
-};
+  id: number
+  title: string
+  content: string
+  publicationDate: string
+  lastUpdate: string
+  categories: AnnouncementCategory[]
+}

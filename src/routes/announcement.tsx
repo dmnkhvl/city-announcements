@@ -1,36 +1,64 @@
 import { useState } from "react"
 import { IoChevronBackOutline } from "react-icons/io5"
 import { useNavigate, useParams } from "react-router-dom"
-
 import { MultiValue } from "react-select"
-import Select from "react-select/base"
-import { Announcement as AnnouncementT } from "../types/announcement"
-import { announcements } from "../data/announcements"
+import Select from "react-select"
+import { useAnnouncements } from "../context/AnnouncementsContext"
+import { AnnouncementCategory } from "../types"
 
 type OptionT = { value: string; label: string }
 
 const options: OptionT[] = [
-  { value: "chocolate", label: "Chocolate" },
-  { value: "strawberry", label: "Strawberry" },
-  { value: "vanilla", label: "Vanilla" },
+  { value: AnnouncementCategory.COMMUNITY_EVENTS, label: "Community Events" },
+  { value: AnnouncementCategory.CULTURE, label: "Culture" },
+  { value: AnnouncementCategory.CRIME_SAFETY, label: "Crime & Safety" },
+  { value: AnnouncementCategory.EMERGENCIES, label: "Emergencies" },
+  { value: AnnouncementCategory.DISCOUNTS_BENEFITS, label: "Discounts & Benefits" },
+  { value: AnnouncementCategory.KIDS_FAMILY, label: "Kids & Family" },
 ]
 
 export default function AnnouncementPage() {
   const navigate = useNavigate()
-  const { announcementId } = useParams()
+
+  const { announcementId } = useParams<{ announcementId: string }>()
+  const { getAnnouncementById, updateAnnouncement } = useAnnouncements()
 
   const id = parseInt(announcementId!, 10)
 
-  const announcement = announcements[id]
+  const announcement = getAnnouncementById(id)
 
   if (!announcement) {
     return <div>Announcement not found</div>
   }
 
-  const [selectedCategories, setSelectedCategories] = useState<MultiValue<OptionT>>([])
+  const [title, setTitle] = useState(announcement.title)
+  const [content, setContent] = useState(announcement.content || "")
+  const [publicationDate, setPublicationDate] = useState(announcement.publicationDate)
 
-  const handleChange = (selectedOptions: MultiValue<OptionT>) => {
+  const initialCategories = announcement.categories.map((category) => ({
+    value: category,
+    label: category.replace("_", " "),
+  }))
+  const [selectedCategories, setSelectedCategories] =
+    useState<MultiValue<OptionT>>(initialCategories)
+
+  const handleCategoryChange = (selectedOptions: MultiValue<OptionT>) => {
     setSelectedCategories(selectedOptions)
+  }
+
+  const handlePublish = () => {
+    const updatedAnnouncement = {
+      ...announcement,
+      title,
+      content,
+      publicationDate,
+      lastUpdate: new Date().toISOString(),
+      categories: selectedCategories.map((option) => option.value as AnnouncementCategory),
+    }
+
+    updateAnnouncement(updatedAnnouncement)
+
+    navigate(-1)
   }
 
   return (
@@ -39,7 +67,7 @@ export default function AnnouncementPage() {
         <button onClick={() => navigate(-1)}>
           <IoChevronBackOutline size={24} />
         </button>
-        <h1 className="pageTitle ">Edit </h1>
+        <h1 className="pageTitle">Edit Announcement</h1>
       </header>
       <form className="w-full max-w-[80%]">
         <main className="flex flex-col gap-y-6">
@@ -52,7 +80,8 @@ export default function AnnouncementPage() {
                 type="text"
                 id="title"
                 name="title"
-                value={announcement.title}
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
                 className="border border-gray-300 rounded-lg px-4 py-2 w-full"
                 placeholder="Announcement title"
               />
@@ -64,7 +93,10 @@ export default function AnnouncementPage() {
               <textarea
                 id="content"
                 name="content"
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
                 className="border border-gray-300 rounded-lg px-4 py-2 w-full h-64"
+                placeholder="Announcement content"
               />
             </div>
           </section>
@@ -78,27 +110,30 @@ export default function AnnouncementPage() {
               options={options}
               isMulti
               value={selectedCategories}
-              onChange={handleChange}
+              onChange={handleCategoryChange}
               className="mb-4"
               classNamePrefix="select"
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              {...({} as any)}
             />
           </section>
           <section>
             <h2 className="pageSubTitle mb-4">Publication Date</h2>
             <input
               type="datetime-local"
-              id="title"
-              name="title"
-              value={announcement.publicationDate}
+              id="publicationDate"
+              name="publicationDate"
+              value={publicationDate}
+              onChange={(e) => setPublicationDate(e.target.value)}
               className="border border-gray-300 rounded-lg px-4 py-2 w-full"
-              placeholder="Enter the announcement title"
+              placeholder="MM/DD/YYYY HH:mm"
             />
           </section>
         </main>
         <footer className="w-full justify-end flex pt-10">
-          <button className="px-4 py-2 rounded-full bg-action" onClick={() => console.log("todo")}>
+          <button
+            type="button"
+            className="px-4 py-2 rounded-full bg-action"
+            onClick={handlePublish}
+          >
             <p className="font-bold">Publish</p>
           </button>
         </footer>
