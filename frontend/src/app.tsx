@@ -6,7 +6,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import RootLayout from "./routes/root"
 import Announcement from "./routes/announcement"
 import Announcements from "./routes/announcements"
-import { AnnouncementsProvider } from "./context/AnnouncementsContext"
+import { trpc, trpcClient } from "./trpc"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
 const router = createBrowserRouter([
   {
@@ -25,10 +26,14 @@ const router = createBrowserRouter([
   },
 ])
 
+const queryClient = new QueryClient()
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <AnnouncementsProvider>
-      <RouterProvider router={router} />
-    </AnnouncementsProvider>
+    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </trpc.Provider>
   </StrictMode>
 )

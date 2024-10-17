@@ -1,9 +1,9 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { IoChevronBackOutline } from "react-icons/io5"
 import { useNavigate, useParams } from "react-router-dom"
 import { MultiValue } from "react-select"
 import Select from "react-select"
-import { useAnnouncements } from "../context/AnnouncementsContext"
+import { trpc } from "../trpc" // Adjust the path as necessary
 import { AnnouncementCategory } from "../types"
 import { getAnnouncementCategoryOptions } from "../helpers"
 
@@ -13,28 +13,41 @@ const options: AnnouncementCategoryOption[] = getAnnouncementCategoryOptions()
 
 export default function AnnouncementPage() {
   const navigate = useNavigate()
-
   const { announcementId } = useParams<{ announcementId: string }>()
-  const { getAnnouncementById, updateAnnouncement } = useAnnouncements()
 
   const id = parseInt(announcementId!, 10)
 
-  const announcement = getAnnouncementById(id)
+  const { data: announcement, isLoading, error } = trpc.getAnnouncementById.useQuery({ id })
 
-  if (!announcement) {
-    return <div>Announcement not found</div>
-  }
+  const [title, setTitle] = useState("")
+  const [content, setContent] = useState("")
+  const [publicationDate, setPublicationDate] = useState("")
+  const [selectedCategories, setSelectedCategories] = useState<
+    MultiValue<AnnouncementCategoryOption>
+  >([])
 
-  const [title, setTitle] = useState(announcement.title)
-  const [content, setContent] = useState(announcement.content || "")
-  const [publicationDate, setPublicationDate] = useState(announcement.publicationDate)
+  useEffect(() => {
+    if (announcement) {
+      setTitle(announcement.title || "")
+      setContent(announcement.content || "")
+      setPublicationDate(announcement.publicationDate || "")
+      setSelectedCategories(
+        announcement.categories.map((category) => ({
+          value: category,
+          label: category.replace("_", " "),
+        }))
+      )
+    }
+  }, [announcement])
 
-  const initialCategories = announcement.categories.map((category) => ({
-    value: category,
-    label: category.replace("_", " "),
-  }))
-  const [selectedCategories, setSelectedCategories] =
-    useState<MultiValue<AnnouncementCategoryOption>>(initialCategories)
+  const { mutate: updateAnnouncement } = trpc.updateAnnouncement.useMutation({
+    onSuccess: () => {
+      navigate(-1)
+    },
+    onError: (error) => {
+      alert(`Failed to update announcement: ${error.message}`)
+    },
+  })
 
   const handleCategoryChange = (selectedOptions: MultiValue<AnnouncementCategoryOption>) => {
     setSelectedCategories(selectedOptions)
@@ -62,17 +75,22 @@ export default function AnnouncementPage() {
     }
 
     const updatedAnnouncement = {
-      ...announcement,
+      id,
       title,
       content,
       publicationDate,
-      lastUpdate: new Date().toISOString(),
       categories: selectedCategories.map((option) => option.value as AnnouncementCategory),
     }
 
     updateAnnouncement(updatedAnnouncement)
+  }
 
-    navigate(-1)
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  if (error || !announcement) {
+    return <div>Announcement not found</div>
   }
 
   return (

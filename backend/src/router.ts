@@ -24,6 +24,23 @@ export const appRouter = t.router({
       return announcement
     }),
 
+  getAnnouncementById: t.procedure
+    .input(
+      z.object({
+        id: z.number(),
+      })
+    )
+    .query(async ({ input }) => {
+      const { id } = input
+      const announcement = await prisma.announcement.findUnique({
+        where: { id },
+      })
+      if (!announcement) {
+        throw new Error("Announcement not found")
+      }
+      return announcement
+    }),
+
   getAnnouncements: t.procedure
     .input(
       z.object({
@@ -41,6 +58,11 @@ export const appRouter = t.router({
       })
       return announcements
     }),
+
+  getAnnouncementsCount: t.procedure.query(async () => {
+    const count = await prisma.announcement.count()
+    return count
+  }),
 
   updateAnnouncement: t.procedure
     .input(
