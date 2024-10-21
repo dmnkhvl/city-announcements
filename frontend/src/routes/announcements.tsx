@@ -4,10 +4,7 @@ import { MdModeEdit } from "react-icons/md"
 import { trpc } from "../trpc"
 
 export default function AnnouncementsPage() {
-  const { data, isLoading, error } = trpc.getAnnouncements.useQuery({
-    page: 1,
-    limit: 10,
-  })
+  const { data, isLoading, error } = trpc.announcement.list.useQuery({ page: 1, limit: 10 })
 
   if (isLoading) {
     console.log("Loading data...")

@@ -1,37 +1,51 @@
-import { fastifyTRPCPlugin, type FastifyTRPCPluginOptions } from "@trpc/server/adapters/fastify"
 import fastify from "fastify"
+import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify"
+import { appRouter } from "./routers"
 import fastifyCors from "@fastify/cors"
-import { appRouter, type AppRouter } from "./router"
-
-const PORT = 3000
 
 const server = fastify({
   maxParamLength: 5000,
+  logger: {
+    level: "debug",
+    transport: {
+      target: "pino-pretty",
+    },
+  },
 })
 
 server.register(fastifyCors, {
-  // move to env
-  origin: ["http://localhost:5173"],
-  methods: ["GET", "POST", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  origin: "http://localhost:5173",
+  credentials: true,
 })
 
 server.register(fastifyTRPCPlugin, {
   prefix: "/trpc",
   trpcOptions: {
     router: appRouter,
-    onError({ path, error }) {
-      console.error(`Error in tRPC handler on path '${path}':`, error)
+    onError: (opts: any) => {
+      const { error, type, path, input, ctx, req } = opts
+      server.log.error(
+        {
+          type,
+          path,
+          input,
+          error: error.message,
+          stack: error.stack,
+        },
+        "tRPC Error"
+      )
     },
-  } satisfies FastifyTRPCPluginOptions<AppRouter>["trpcOptions"],
+  },
 })
-;(async () => {
+
+const start = async () => {
   try {
-    await server.listen({ port: PORT })
-    // move to env
-    console.log(`Server is running on http://localhost:${PORT}`)
+    await server.listen({ port: 3000 })
+    console.log("Server is running on http://localhost:3000")
   } catch (err) {
     server.log.error(err)
     process.exit(1)
   }
-})()
+}
+
+start()

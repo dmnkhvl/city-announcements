@@ -3,9 +3,9 @@ import { IoChevronBackOutline } from "react-icons/io5"
 import { useNavigate, useParams } from "react-router-dom"
 import { MultiValue } from "react-select"
 import Select from "react-select"
-import { trpc } from "../trpc" // Adjust the path as necessary
-import { AnnouncementCategory } from "../types"
 import { getAnnouncementCategoryOptions } from "../helpers"
+import { trpc } from "../trpc"
+import dayjs from "dayjs"
 
 type AnnouncementCategoryOption = { value: string; label: string }
 
@@ -17,7 +17,7 @@ export default function AnnouncementPage() {
 
   const id = parseInt(announcementId!, 10)
 
-  const { data: announcement, isLoading, error } = trpc.getAnnouncementById.useQuery({ id })
+  const { data: announcement, isLoading, error } = trpc.announcement.getById.useQuery({ id })
 
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
@@ -30,7 +30,8 @@ export default function AnnouncementPage() {
     if (announcement) {
       setTitle(announcement.title || "")
       setContent(announcement.content || "")
-      setPublicationDate(announcement.publicationDate || "")
+      setPublicationDate(dayjs(announcement.publicationDate).format("YYYY-MM-DDTHH:mm"))
+
       setSelectedCategories(
         announcement.categories.map((category) => ({
           value: category,
@@ -40,11 +41,14 @@ export default function AnnouncementPage() {
     }
   }, [announcement])
 
-  const { mutate: updateAnnouncement } = trpc.updateAnnouncement.useMutation({
-    onSuccess: () => {
-      navigate(-1)
+  const { mutate: updateAnnouncement } = trpc.announcement.update.useMutation({
+    onSuccess: (data) => {
+      console.log("Update successful:", data)
+      setTimeout(() => navigate(-1), 1000)
     },
     onError: (error) => {
+      console.error("Update announcement error:", error)
+      console.error(JSON.stringify(error, null, 2))
       alert(`Failed to update announcement: ${error.message}`)
     },
   })
@@ -79,9 +83,8 @@ export default function AnnouncementPage() {
       title,
       content,
       publicationDate,
-      categories: selectedCategories.map((option) => option.value as AnnouncementCategory),
+      categories: selectedCategories.map((option) => option.value),
     }
-
     updateAnnouncement(updatedAnnouncement)
   }
 

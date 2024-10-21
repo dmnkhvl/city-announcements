@@ -4,18 +4,18 @@ import { MenuItem } from "./MenuItem"
 import { trpc } from "../trpc"
 
 const Sidebar: React.FC = () => {
-  const { data, isLoading, error } = trpc.getAnnouncementsCount.useQuery()
+  const { data, isLoading, error } = trpc.announcement.count.useQuery()
 
   if (isLoading) {
     console.log("Loading data...")
-    return <div>Loading...</div>
+    return <div className="bg-gray-100 h-dvh w-80 border-r"></div>
   }
 
   if (error) {
     console.error("There was an error fetching announcements count", error)
   }
 
-  const count = data
+  const count = data?.count
 
   return (
     <div className="h-dvh w-80 border-r">
