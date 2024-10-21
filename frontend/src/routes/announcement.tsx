@@ -42,14 +42,12 @@ export default function AnnouncementPage() {
   }, [announcement])
 
   const { mutate: updateAnnouncement } = trpc.announcement.update.useMutation({
-    onSuccess: (data) => {
-      console.log("Update successful:", data)
-      setTimeout(() => navigate(-1), 1000)
+    onSuccess: () => {
+      console.log("Update successful:")
+      navigate(-1)
     },
     onError: (error) => {
       console.error("Update announcement error:", error)
-      console.error(JSON.stringify(error, null, 2))
-      alert(`Failed to update announcement: ${error.message}`)
     },
   })
 

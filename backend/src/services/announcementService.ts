@@ -23,7 +23,7 @@ export const AnnouncementService = {
     return prisma.announcement.findMany({
       skip,
       take: limit,
-      orderBy: { publicationDate: "desc" },
+      orderBy: { lastUpdated: "desc" },
     })
   },
 
@@ -34,12 +34,10 @@ export const AnnouncementService = {
   async update(data: Announcement) {
     try {
       const { id, publicationDate, ...updateData } = data
-      const now = new Date()
       const result = await prisma.announcement.update({
         where: { id },
         data: {
           ...updateData,
-          lastUpdated: now,
         },
       })
       return result
