@@ -1,4 +1,6 @@
-# Simpli-Mono Monorepo
+# City annoucments
+
+[Live demo](https://city-announcements.vercel.app) running on [Vercel](http://vercel.com) and [Railway](http://railway.app).
 
 Clone this repository into your local machine and navigate into the individual folders (`frontend` and `backend`).
 
