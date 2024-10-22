@@ -3,17 +3,19 @@ import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify"
 import { appRouter } from "./routers"
 import fastifyCors from "@fastify/cors"
 
+const isDevelopment = process.env.NODE_ENV === "development"
+
 const server = fastify({
   maxParamLength: 5000,
-  logger: {
-    level: "debug",
-    transport: {
-      target: "pino-pretty",
-    },
-  },
+  logger: isDevelopment
+    ? {
+        level: "debug",
+        transport: {
+          target: "pino-pretty",
+        },
+      }
+    : true,
 })
-
-const isDevelopment = process.env.NODE_ENV === "development"
 
 server.register(fastifyCors, {
   origin: (origin, cb) => {
@@ -55,7 +57,7 @@ server.register(fastifyTRPCPlugin, {
 
 const start = async () => {
   try {
-    await server.listen({ port: 3000 })
+    await server.listen({ port: 3000, host: "0.0.0.0" })
     console.log("Server is running on http://localhost:3000")
   } catch (err) {
     server.log.error(err)
