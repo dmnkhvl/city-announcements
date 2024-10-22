@@ -9,7 +9,7 @@ Clone this repository into your local machine and navigate into the individual f
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/dmnkhvl/simpli.git
+   git clone https://github.com/dmnkhvl/city-announcements.git
    ```
 
 2. **Navigate into each folder and install dependencies:**
