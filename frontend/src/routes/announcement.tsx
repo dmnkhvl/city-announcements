@@ -87,7 +87,7 @@ export default function AnnouncementPage() {
   }
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <div></div>
   }
 
   if (error || !announcement) {

@@ -8,7 +8,7 @@ export default function AnnouncementsPage() {
 
   if (isLoading) {
     console.log("Loading data...")
-    return <div>Loading...</div>
+    return <div></div>
   }
 
   if (error) {

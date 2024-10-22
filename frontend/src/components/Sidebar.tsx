@@ -8,7 +8,7 @@ const Sidebar: React.FC = () => {
 
   if (isLoading) {
     console.log("Loading data...")
-    return <div className="bg-gray-100 h-dvh w-80 border-r"></div>
+    return <div className="h-dvh w-80 border-r"></div>
   }
 
   if (error) {
