@@ -1,0 +1,12 @@
+[build]
+builder = "nixpacks"
+buildCommand = "bun install && bun run prisma generate"
+
+[deploy]
+startCommand = "bun run start"
+healthcheckPath = "/health"
+restartPolicyType = "on_failure"
+
+[nixpacks]
+nodejs-version = "20"
+bun-version = "1.0.15"

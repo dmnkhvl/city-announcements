@@ -1,6 +1,9 @@
 {
   "name": "backend",
   "version": "1.0.0",
+  "engines": {
+    "bun": "^1.0.0"
+  },
   "scripts": {
     "dev": "NODE_ENV=development bun run src/server.ts",
     "start": "NODE_ENV=production bun run src/server.ts",
