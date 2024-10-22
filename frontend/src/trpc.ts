@@ -5,12 +5,10 @@ import { inferRouterInputs, inferRouterOutputs } from "@trpc/server"
 
 export const trpc = createTRPCReact<AppRouter>()
 
-const TRPC_API_URL = import.meta.env.VITE_TRPC_API_URL
-
 export const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
-      url: TRPC_API_URL,
+      url: `${import.meta.env.VITE_API_URL}/trpc`,
     }),
   ],
 })

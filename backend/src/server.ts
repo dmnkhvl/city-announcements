@@ -13,8 +13,23 @@ const server = fastify({
   },
 })
 
+const isDevelopment = process.env.NODE_ENV === "development"
+
 server.register(fastifyCors, {
-  origin: "http://localhost:5173",
+  origin: (origin, cb) => {
+    if (isDevelopment) {
+      cb(null, true)
+      return
+    }
+
+    const productionUrl = process.env.FRONTEND_URL
+    if (!origin || origin === productionUrl) {
+      cb(null, true)
+      return
+    }
+
+    cb(new Error("Not allowed by CORS"), false)
+  },
   credentials: true,
 })
 

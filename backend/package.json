@@ -2,7 +2,8 @@
   "name": "backend",
   "version": "1.0.0",
   "scripts": {
-    "dev": "bun run src/server.ts",
+    "dev": "NODE_ENV=development bun run src/server.ts",
+    "start": "NODE_ENV=production bun run src/server.ts",
     "build": "bun run prisma generate && bun run tsc"
   },
   "dependencies": {
