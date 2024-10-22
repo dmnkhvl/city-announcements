@@ -1,5 +1,7 @@
 # Backend
 
+TODO: Add redis to manage requests and cache data
+
 This API provides operations for managing announcements using tRPC, Prisma, and PostgreSQL.
 
 ## Getting Started
