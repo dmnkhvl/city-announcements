@@ -1,21 +1,23 @@
 FROM oven/bun:1
-
 WORKDIR /app
 
-# Copy Prisma files first to avoid caching issues
-COPY prisma ./prisma/
-
-# Copy everything needed for Prisma first
+# Copy package files first
 COPY package.json bun.lockb ./
 
-# Install and generate Prisma
+# Install dependencies
 RUN bun install
+
+# Copy Prisma schema
+COPY prisma ./prisma/
+
+# Generate Prisma client
 RUN bunx prisma generate
 
-# Now copy the rest
+# Copy the rest of the application
 COPY . .
 
 ENV NODE_ENV production
 EXPOSE 3000
 
-CMD ["bun", "run", "start"]
+# Ensure Prisma client is generated before starting
+CMD ["sh", "-c", "bunx prisma generate && bun run start"]
