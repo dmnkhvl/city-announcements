@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "NODE_ENV=development bun run src/server.ts",
     "start": "NODE_ENV=production bun run src/server.ts",
-    "build": "bun run prisma generate && bun run tsc"
+    "build": "bun install && bun run prisma generate"
   },
   "dependencies": {
     "@fastify/cors": "^10.0.1",
