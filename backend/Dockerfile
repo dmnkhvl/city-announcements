@@ -2,9 +2,11 @@ FROM oven/bun:1
 
 WORKDIR /app
 
+# Copy Prisma files first to avoid caching issues
+COPY prisma ./prisma/
+
 # Copy everything needed for Prisma first
 COPY package.json bun.lockb ./
-COPY prisma ./prisma
 
 # Install and generate Prisma
 RUN bun install
