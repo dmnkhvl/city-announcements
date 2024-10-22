@@ -1,90 +1,89 @@
-# Updated API Documentation
+# API Documentation
 
 ## Overview
 
-This API provides CRUD operations for managing announcements using tRPC, Prisma, and PostgreSQL.
-
-## Endpoints
-
-All endpoints use the base URL: `http://localhost:3000/trpc`
-
-### 1. createAnnouncement
-
-- **Method**: POST
-- **Endpoint**: `/createAnnouncement`
-- **Input**:
-  ```typescript
-  {
-    title: string,
-    categories: string[]
-  }
-  ```
-- **Description**: Creates a new announcement
-- **Response**: Returns the created announcement object
-
-### 2. getAnnouncementById
-
-- **Method**: GET
-- **Endpoint**: `/getAnnouncementById`
-- **Input**:
-  ```typescript
-  {
-    id: number
-  }
-  ```
-- **Description**: Retrieves a single announcement by its ID
-- **Response**: Returns the announcement object or throws an error if not found
-
-### 3. getAnnouncements
-
-- **Method**: GET
-- **Endpoint**: `/getAnnouncements`
-- **Input**:
-  ```typescript
-  {
-    page?: number (default: 1),
-    limit?: number (default: 10)
-  }
-  ```
-- **Description**: Retrieves a paginated list of announcements
-- **Response**: Returns an array of announcement objects
-
-### 4. getAnnouncementsCount
-
-- **Method**: GET
-- **Endpoint**: `/getAnnouncementsCount`
-- **Input**: None
-- **Description**: Retrieves the total count of announcements
-- **Response**: Returns a number representing the total count of announcements
-
-### 5. updateAnnouncement
-
-- **Method**: POST
-- **Endpoint**: `/updateAnnouncement`
-- **Input**:
-  ```typescript
-  {
-    id: number,
-    title?: string,
-    categories?: string[]
-  }
-  ```
-- **Description**: Updates an existing announcement
-- **Response**: Returns the updated announcement object
-
-## Error Handling
-
-- All endpoints may throw errors for invalid inputs or server issues
-- Specific errors (e.g., "Announcement not found") are thrown for certain conditions
+This API provides operations for managing announcements using tRPC, Prisma, and PostgreSQL.
 
 ## Data Model
 
 ```typescript
 Announcement {
-  id: number
-  title: string
-  categories: string[]
-  publicationDate: Date
-  lastUpdated: Date
+  id: number;
+  title: string;
+  content?: string;
+  categories: string[];
+  publicationDate: DateTime;
+  lastUpdated: DateTime;
 }
 ```
+
+## Endpoints
+
+### 1. Get Announcement by ID
+
+Retrieves a single announcement by its ID
+
+- **Method**: Query
+- **Procedure**: `getById`
+- **Input**:
+
+```typescript
+{
+  id: number
+}
+```
+
+- **Response**: Returns the announcement object
+- **Error**: Throws `NOT_FOUND` error if announcement doesn't exist
+
+### 2. List Announcements
+
+Retrieves a paginated list of announcements, ordered by lastUpdated in descending order
+
+- **Method**: Query
+- **Procedure**: `list`
+- **Input**:
+
+```typescript
+{
+  page: number // defaults to 1
+  limit: number // defaults to 10
+}
+```
+
+- **Response**: Returns an array of announcement objects
+
+### 3. Count Announcements
+
+Gets the total count of announcements
+
+- **Method**: Query
+- **Procedure**: `count`
+- **Response**:
+
+```typescript
+{
+  count: number
+}
+```
+
+### 4. Update Announcement
+
+Updates an existing announcement
+
+- **Method**: Mutation
+- **Procedure**: `update`
+- **Input**: Announcement object with the following schema:
+
+```typescript
+{
+  id: number;
+  title: string;
+  content?: string;
+  categories: string[];
+  publicationDate: string;
+  lastUpdated?: Date;
+}
+```
+
+- **Response**: Returns the updated announcement object

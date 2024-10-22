@@ -3,10 +3,7 @@ import prisma from "../config/database"
 import type { Announcement } from "../models/announcement"
 
 export const AnnouncementService = {
-  async create(data: Pick<Announcement, "title" | "categories">) {
-    return prisma.announcement.create({ data })
-  },
-
+  
   async getById(id: number) {
     const announcement = await prisma.announcement.findUnique({ where: { id } })
     if (!announcement) {
