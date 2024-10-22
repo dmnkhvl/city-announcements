@@ -1,8 +1,16 @@
-# API Documentation
-
-## Overview
+# Backend
 
 This API provides operations for managing announcements using tRPC, Prisma, and PostgreSQL.
+
+## Getting Started
+
+To run this project locally, follow these steps:
+
+2. **Install dependencies using Bun**:
+   `bun install`
+
+3. **Run the development server:**:
+   `bun run dev`
 
 ## Data Model
 

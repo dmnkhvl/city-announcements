@@ -17,6 +17,7 @@ Clone this repository into your local machine and navigate into the individual f
    ```bash
    cd backend
    bun install
+   bun run dev
    ```
 
    For frontend:
@@ -24,6 +25,7 @@ Clone this repository into your local machine and navigate into the individual f
    ```bash
    cd frontend
    bun install
+   bun run dev
    ```
 
 3. **More information** is available inside the `frontend` and `backend` folders.
