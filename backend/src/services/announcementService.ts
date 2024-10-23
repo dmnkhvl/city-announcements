@@ -29,10 +29,11 @@ export const AnnouncementService = {
 
   async update(data: Announcement) {
     try {
-      const { id, ...updateData } = data
+      const { id, publicationDate, ...updateData } = data
       const result = await prisma.announcement.update({
         where: { id },
         data: {
+          publicationDate: new Date(publicationDate),
           ...updateData,
         },
       })
