@@ -12,7 +12,7 @@ model Announcement {
   id             Int      @id @default(autoincrement())
   title          String
   content          String?
-  publicationDate DateTime @default(now())
+  publicationDate DateTime
   lastUpdated    DateTime @updatedAt
   categories     String[]
 }
