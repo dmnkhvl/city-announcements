@@ -96,7 +96,6 @@ export default function AnnouncementPage() {
       publicationDate: new Date(publicationDate).toISOString(),
       categories: selectedCategories.map((option) => option.value),
     }
-    console.log(updatedAnnouncement)
     updateAnnouncement(updatedAnnouncement)
   }
 

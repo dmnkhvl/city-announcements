@@ -12,11 +12,11 @@ export default function AnnouncementsPage() {
       <table className="min-w-full mt-10">
         <thead>
           <tr>
-            <th className="tableText">Title</th>
-            <th className="tableText">Publication Date</th>
-            <th className="tableText">Last Update</th>
-            <th className="tableText">Categories</th>
-            <th className="tableText" />
+            <th className="tableText min-w-[240px] w-[740px]">Title</th>
+            <th className="tableText min-w-[200px] w-[250px]">Publication Date</th>
+            <th className="tableText min-w-[200px] w-[250px]">Last Update</th>
+            <th className="tableText min-w-[250px] w-[500px]">Categories</th>
+            <th className="tableText w-[100px]" />
           </tr>
         </thead>
         <tbody>
