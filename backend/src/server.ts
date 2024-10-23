@@ -2,6 +2,28 @@ import fastify from "fastify"
 import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify"
 import { appRouter } from "./routers"
 import fastifyCors from "@fastify/cors"
+import { PrismaClient } from "@prisma/client"
+
+console.log("Current working directory:", process.cwd())
+console.log("Files in current directory:", require("fs").readdirSync("."))
+console.log("NODE_ENV:", process.env.NODE_ENV)
+console.log("DATABASE_URL:", process.env.DATABASE_URL?.slice(0, 10) + "...")
+
+const prisma = new PrismaClient({
+  log: ["query", "info", "warn", "error"],
+})
+
+async function testConnection() {
+  try {
+    await prisma.$connect()
+    console.log("Successfully connected to database")
+  } catch (error) {
+    console.error("Failed to connect to database:", error)
+    process.exit(1)
+  }
+}
+
+testConnection()
 
 const isDevelopment = process.env.NODE_ENV === "development"
 const productionUrl = process.env.FRONTEND_URL
