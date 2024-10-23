@@ -4,6 +4,7 @@ import { appRouter } from "./routers"
 import fastifyCors from "@fastify/cors"
 
 const isDevelopment = process.env.NODE_ENV === "development"
+const productionUrl = process.env.FRONTEND_URL
 
 const server = fastify({
   maxParamLength: 5000,
@@ -19,18 +20,29 @@ const server = fastify({
 
 server.register(fastifyCors, {
   origin: (origin, cb) => {
+    if (!origin) {
+      cb(null, true)
+      return
+    }
+
     if (isDevelopment) {
       cb(null, true)
       return
     }
 
-    const productionUrl = process.env.FRONTEND_URL
-    if (!origin || origin === productionUrl) {
-      cb(null, true)
-      return
-    }
+    try {
+      const allowedOrigin = new URL(productionUrl as string)
+      const incomingOrigin = new URL(origin)
 
-    cb(new Error("Not allowed by CORS"), false)
+      if (allowedOrigin.host === incomingOrigin.host) {
+        cb(null, true)
+        return
+      }
+
+      cb(new Error("Not allowed by CORS"), false)
+    } catch (err) {
+      cb(new Error("Invalid origin"), false)
+    }
   },
   credentials: true,
 })
