@@ -3,7 +3,6 @@ import prisma from "../config/database"
 import type { Announcement } from "../models/announcement"
 
 export const AnnouncementService = {
-  
   async getById(id: number) {
     const announcement = await prisma.announcement.findUnique({ where: { id } })
     if (!announcement) {
@@ -30,7 +29,7 @@ export const AnnouncementService = {
 
   async update(data: Announcement) {
     try {
-      const { id, publicationDate, ...updateData } = data
+      const { id, ...updateData } = data
       const result = await prisma.announcement.update({
         where: { id },
         data: {
