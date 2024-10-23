@@ -1,6 +1,8 @@
 FROM oven/bun:1
 WORKDIR /app
 
+ENV NODE_ENV production
+
 COPY package.json bun.lockb ./
 COPY prisma ./prisma/
 
@@ -9,7 +11,6 @@ RUN bunx prisma generate --schema=./prisma/schema.prisma
 
 COPY . .
 
-ENV NODE_ENV production
 ENV FRONTEND_URL="https://city-announcements.vercel.app"
 EXPOSE 3000
 

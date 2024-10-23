@@ -2,5 +2,11 @@
   "version": 2,
   "buildCommand": "bun run build",
   "outputDirectory": "dist",
-  "installCommand": "bun install"
+  "installCommand": "bun install",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
