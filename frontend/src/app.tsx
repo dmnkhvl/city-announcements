@@ -8,6 +8,7 @@ import Announcement from "./routes/announcement"
 import Announcements from "./routes/announcements"
 import { trpc, trpcClient } from "./trpc"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { AnnouncementProvider } from "./context/announcementContext"
 
 const router = createBrowserRouter([
   {
@@ -32,7 +33,9 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <AnnouncementProvider>
+          <RouterProvider router={router} />
+        </AnnouncementProvider>
       </QueryClientProvider>
     </trpc.Provider>
   </StrictMode>

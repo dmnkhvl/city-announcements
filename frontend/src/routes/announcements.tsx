@@ -1,20 +1,10 @@
 import dayjs from "dayjs"
 import { Link } from "react-router-dom"
 import { MdModeEdit } from "react-icons/md"
-import { trpc } from "../trpc"
+import { useAnnouncements } from "../context/announcementContext"
 
 export default function AnnouncementsPage() {
-  const { data, isLoading, error } = trpc.announcement.list.useQuery({ page: 1, limit: 10 })
-
-  if (isLoading) {
-    console.log("Loading data...")
-    return <div></div>
-  }
-
-  if (error) {
-    console.error("Error fetching data:", error)
-    return <div>Error: {error.message}</div>
-  }
+  const { announcements } = useAnnouncements()
 
   return (
     <div className="py-12 px-10 w-full">
@@ -30,7 +20,7 @@ export default function AnnouncementsPage() {
           </tr>
         </thead>
         <tbody>
-          {data?.map((announcement) => (
+          {announcements?.map((announcement) => (
             <tr key={announcement.id}>
               <td className="tableText">{announcement.title}</td>
               <td className="tableText">
@@ -39,8 +29,8 @@ export default function AnnouncementsPage() {
                   : "Invalid date"}
               </td>
               <td className="tableText">
-                {dayjs(announcement.lastUpdated).isValid()
-                  ? dayjs(announcement.lastUpdated).format("MMM D, YYYY")
+                {dayjs(announcement.lastUpdate).isValid()
+                  ? dayjs(announcement.lastUpdate).format("MMM D, YYYY")
                   : "Invalid date"}
               </td>
               <td className="tableText">{announcement.categories.join(", ")}</td>

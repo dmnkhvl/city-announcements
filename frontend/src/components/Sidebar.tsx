@@ -1,21 +1,10 @@
 import { FaBullhorn, FaHome } from "react-icons/fa"
 import { Link } from "react-router-dom"
 import { MenuItem } from "./MenuItem"
-import { trpc } from "../trpc"
+import { useAnnouncements } from "../context/announcementContext"
 
 const Sidebar: React.FC = () => {
-  const { data, isLoading, error } = trpc.announcement.count.useQuery()
-
-  if (isLoading) {
-    console.log("Loading data...")
-    return <div className="h-dvh w-80 border-r"></div>
-  }
-
-  if (error) {
-    console.error("There was an error fetching announcements count", error)
-  }
-
-  const count = data?.count
+  const { count } = useAnnouncements()
 
   return (
     <div className="h-dvh w-80 border-r">

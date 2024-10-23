@@ -6,6 +6,7 @@ import Select from "react-select"
 import { getAnnouncementCategoryOptions } from "../helpers"
 import { trpc } from "../trpc"
 import dayjs from "dayjs"
+import { useAnnouncements } from "../context/announcementContext"
 
 type AnnouncementCategoryOption = { value: string; label: string }
 
@@ -17,7 +18,16 @@ export default function AnnouncementPage() {
 
   const id = parseInt(announcementId!, 10)
 
-  const { data: announcement, isLoading, error } = trpc.announcement.getById.useQuery({ id })
+  const {
+    data: announcement,
+    isLoading,
+    error,
+  } = trpc.announcement.getById.useQuery(
+    { id },
+    {
+      staleTime: 0, // Always fetch fresh data for the edit page
+    }
+  )
 
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
@@ -33,7 +43,7 @@ export default function AnnouncementPage() {
       setPublicationDate(dayjs(announcement.publicationDate).format("YYYY-MM-DDTHH:mm"))
 
       setSelectedCategories(
-        announcement.categories.map((category) => ({
+        announcement.categories.map((category: string) => ({
           value: category,
           label: category.replace("_", " "),
         }))
@@ -41,10 +51,13 @@ export default function AnnouncementPage() {
     }
   }, [announcement])
 
+  const { invalidateAll } = useAnnouncements()
+
   const { mutate: updateAnnouncement } = trpc.announcement.update.useMutation({
     onSuccess: () => {
-      console.log("Update successful:")
       navigate(-1)
+      invalidateAll()
+      console.log("Update successful")
     },
     onError: (error) => {
       console.error("Update announcement error:", error)
@@ -80,9 +93,10 @@ export default function AnnouncementPage() {
       id,
       title,
       content,
-      publicationDate,
+      publicationDate: new Date(publicationDate).toISOString(),
       categories: selectedCategories.map((option) => option.value),
     }
+    console.log(updatedAnnouncement)
     updateAnnouncement(updatedAnnouncement)
   }
 

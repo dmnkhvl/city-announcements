@@ -5,7 +5,9 @@ export const AnnouncementSchema = z.object({
   title: z.string(),
   content: z.string().optional(),
   categories: z.array(z.string()),
-  publicationDate: z.string(),
+  publicationDate: z
+    .union([z.string(), z.date()])
+    .transform((val) => (typeof val === "string" ? new Date(val) : val)),
   lastUpdated: z.date().optional(),
 })
 

@@ -33,8 +33,8 @@ export const AnnouncementService = {
       const result = await prisma.announcement.update({
         where: { id },
         data: {
-          publicationDate: new Date(publicationDate),
           ...updateData,
+          publicationDate: publicationDate ? new Date(publicationDate) : undefined,
         },
       })
       return result
